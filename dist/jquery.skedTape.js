@@ -6,6 +6,92 @@
 
 alert("Hi....");
 
+function formatAMPM(hours, minutes, addZerosToMin, addZerosToHrs) {
+	var ampm = hours >= 12 ? 'PM' : 'AM';
+	hours = hours % 12;
+	hours = hours ? hours : 12; // the hour '0' should be '12'
+	if (addZerosToMin) {
+		minutes = minutes < 10 ? '0' + minutes : minutes;
+	}
+	if (addZerosToHrs) {
+		hours = hours < 10 ? '0' + hours : hours;
+	}
+	var strTime = hours + ':' + minutes + ' ' + ampm;
+	return strTime;
+}
+
+var Role = {
+	SA: 'SA',
+	MECHANIC: 'MECHANIC',
+};
+
+var localLunchStart;
+var localLunchEnd;
+var intersectionId = "";
+var toolTip = "";
+
+function timeConvert(time) {
+	var hours = (time / 60);
+	var roundedHours = Math.floor(hours);
+	var minutes = (hours - roundedHours) * 60;
+	var roundedMinutes = Math.round(minutes);
+	if (roundedMinutes < 10) {
+		roundedMinutes = "0" + roundedMinutes;
+	}
+	return roundedHours + ":" + roundedMinutes;
+}
+
+function CompareTime(startTime, endTime) {
+	var regExp = /(\d{1,2})\:(\d{1,2})/;
+	if (parseInt(endTime.replace(regExp, "$1$2$3")) > parseInt(startTime.replace(regExp, "$1$2$3"))) {
+		return false;
+	}
+	else {
+		return true;
+	}
+}
+
+function CompareTimeBetween(startTime, endTime, timeToCheck) {
+	var regExp = /(\d{1,2})\:(\d{1,2})/;
+	if (parseInt(timeToCheck.replace(regExp, "$1$2$3")) <= parseInt(endTime.replace(regExp, "$1$2$3")) && parseInt(timeToCheck.replace(regExp, "$1$2$3")) >= parseInt(startTime.replace(regExp, "$1$2$3"))) {
+		return false;
+	}
+	else if (parseInt(timeToCheck.replace(regExp, "$1$2$3")) == parseInt(endTime.replace(regExp, "$1$2$3")) && parseInt(timeToCheck.replace(regExp, "$1$2$3")) == parseInt(startTime.replace(regExp, "$1$2$3"))) {
+		return false;
+	}
+	else {
+		return true;
+	}
+}
+
+//India only
+function CompareDatesPlanner(fromDate, toDate) {
+	var parts = fromDate.split('/');
+	var fromDate = Number(parts[2] + parts[1] + parts[0]);
+	parts = toDate.split('/');
+	var toDate = Number(parts[2] + parts[1] + parts[0]);
+	if (fromDate == toDate) {
+		return "1";
+	}
+	else if (fromDate > toDate) {
+		return "2";
+	}
+	else
+		return "3";
+}
+
+function ValidateDateAndtimeForPlanner(planTime, sysTime, selectedDate, currentDate) {
+	if (CompareDatesPlanner(selectedDate, currentDate) == "1") {
+		if (CompareTime(planTime, sysTime))
+			return true;
+		else
+			return false;
+	}
+	else if (CompareDatesPlanner(selectedDate, currentDate) == "2") {
+		return true;
+	}
+}
+
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
@@ -481,19 +567,19 @@ SkedTape.prototype = {
 		});
 		return $ul;
 	},
-	renderHours: function() {
+	renderHours: function () {
 		var $ul = $('<ul/>');
-
 		var tick = new Date(this.start);
 		while (tick.getTime() <= this.end.getTime()) {
 			var hour = tick.getHours();
+			var minutes = tick.getMinutes();
 
 			var $time = $('<time/>')
 				.attr('datetime', tick.toISOString())
-				.text(this.format.hours(hour === 24 ? 0 : hour));
+				.text(formatAMPM(hour, minutes, true));
 			$('<li/>').append($time).appendTo($ul);
 
-			tick.setTime(tick.getTime() + 60*60*1000);
+			tick.setTime(tick.getTime() + 60 * 60 * 1000);
 		}
 
 		var $li = $ul.children();
