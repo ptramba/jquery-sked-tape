@@ -4,7 +4,7 @@
  * Author: Alexander Korostin <lexkrstn@gmail.com>
  */
 
-alert("Hi....");
+alert("Hi AM PM...");
 
 function formatAMPM(hours, minutes, addZerosToMin, addZerosToHrs) {
 	var ampm = hours >= 12 ? 'PM' : 'AM';
