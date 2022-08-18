@@ -473,15 +473,21 @@ SkedTape.prototype = {
 	},
 	renderLocation: function(location) {
 		var $text = $('<div class="sked-tape__location-text"/>')
-			.text(location.name);
-		var $location = $('<li class="sked-tape__location"/>')
-			.attr({'title': location.name, 'data-id': location.id})
-			.append($text);
-		var canAdd = this.isAdding()
-			? this.canAddIntoLocation(location, this.dummyEvent)
-			: undefined;
-		this.postRenderLocation($text, location, canAdd);
-		return $location;
+				.text(location.name);
+
+			var changecss = "sked-tape__location";
+			if (location.name == 'Planned' || location.name == 'Actual') {
+				changecss = "sked-tape__locationpana";
+			}
+
+			var $location = $('<li class="' + changecss + '"/>')
+				.attr({ 'title': location.name, 'data-id': location.id })
+				.append($text);
+			var canAdd = this.isAdding()
+				? this.canAddIntoLocation(location, this.dummyEvent)
+				: undefined;
+			this.postRenderLocation($text, location, canAdd);
+			return $location;
 	},
 	renderLocations: function() {
 		var $frag = $(document.createDocumentFragment());
@@ -606,7 +612,7 @@ SkedTape.prototype = {
 		this.timeIndicators = {};
 
 		var isalternate = false;
-		
+
 		$.each(this.getLocations(), $.proxy(function(i, location) {
 			var $li = "";
 			var changecss = 'sked-tape__event-row';
