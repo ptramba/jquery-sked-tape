@@ -4,8 +4,6 @@
  * Author: Alexander Korostin <lexkrstn@gmail.com>
  */
 
-alert("Hi AM PM...");
-
 function formatAMPM(hours, minutes, addZerosToMin, addZerosToHrs) {
 	var ampm = hours >= 12 ? 'PM' : 'AM';
 	hours = hours % 12;
@@ -606,11 +604,34 @@ SkedTape.prototype = {
 			return a.start.getTime() - b.start.getTime();
 		}, this));
 		this.timeIndicators = {};
+
+		var isalternate = false;
+		
 		$.each(this.getLocations(), $.proxy(function(i, location) {
-			var $li = $('<li class="sked-tape__event-row"/>')
-				.data('locationId', location.id)
-				.appendTo(this.$timeline);
-			// Render time indicator
+			var $li = "";
+			var changecss = 'sked-tape__event-row';
+
+			if (location.id.includes('unique_')) {
+				changecss = 'sked-tape__event-row-name';
+				$li = $('<li class="' + changecss + '"/>')
+						.data('locationId', location.id)
+						.appendTo(this.$timeline);
+			}
+			else if (!isalternate) {
+				$li = $('<li class="' + changecss + '" style="background-color: #f4f4f4;"/>')
+					.data('locationId', location.id)
+					.appendTo(this.$timeline);
+
+				isalternate = true;
+			}
+			else if (isalternate) {
+				$li = $('<li class="' + changecss + '" style="background-color: #fdfdfd;"/>')
+					.data('locationId', location.id)
+					.appendTo(this.$timeline);
+
+				isalternate = false;
+			}
+
 			var $timeIndicator = $('<div class="sked-tape__indicator"/>').hide();
 			if (this.timeIndicatorSerifs)
 				$timeIndicator.addClass('sked-tape__indicator--serifs');
