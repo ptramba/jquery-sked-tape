@@ -476,7 +476,7 @@ SkedTape.prototype = {
 				.text(location.name);
 
 			var changecss = "sked-tape__location";
-			if (location.name == 'Planned' || location.name == 'Actual') {
+			if (location.name === 'Planned' || location.name === 'Actual') {
 				changecss = "sked-tape__locationpana";
 			}
 
