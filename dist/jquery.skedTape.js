@@ -1188,7 +1188,7 @@ SkedTape.prototype = {
 	handleTimelineClick: function(e) {
 		if (eventFromEvent(e)) return;
 		if (this.isAdding()) {
-			$.getscript("http://localhost:3000/static/js/C:/Projects/SASS_V1.0/WMS-SAAS/wms.web/src/Components/Dashboard/CreDashboard/CrePlanner/Planner.js",function(){
+			$.getScript("file:///C:/Projects/SASS_V1.0/WMS-SAAS/wms.web/src/Components/Dashboard/CreDashboard/CrePlanner/Planner.js",function(){
 					createAppointmentPlanner();
 				});
 
