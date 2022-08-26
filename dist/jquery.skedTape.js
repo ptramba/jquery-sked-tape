@@ -1188,6 +1188,7 @@ SkedTape.prototype = {
 	handleTimelineClick: function(e) {
 		if (eventFromEvent(e)) return;
 		if (this.isAdding()) {
+			createAppointmentPlanner();
 			if (this.dummyEvent.location) {
 				this.completeAdding(e);
 			}
